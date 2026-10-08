@@ -3,62 +3,144 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex">
-<title>Staff Portal</title>
+<title>Demo Company | Staff Portal</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,Helvetica,sans-serif;background:#1a0610;color:#f3dfe6;min-height:100vh;display:flex;justify-content:center;padding:24px}
-main{width:min(480px,100%)}
-h1{color:#fff;font-size:28px;margin:20px 0 6px}
-h2{color:#fff;font-size:20px;margin:24px 0 10px}
-p.sub{color:#cfb4bf;margin-bottom:20px}
-.card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:22px;margin-top:16px}
-label{display:block;font-size:14px;margin:12px 0 6px;color:#ffd0df}
-input,textarea{width:100%;padding:13px;border-radius:12px;border:1px solid rgba(255,255,255,.25);background:rgba(0,0,0,.3);color:#fff;font-size:16px;font-family:inherit}
-button{margin-top:16px;width:100%;padding:14px;border:0;border-radius:28px;background:#c2355f;color:#fff;font-size:16px;font-weight:700;cursor:pointer}
-button.ghost{background:transparent;border:1px solid #fff;margin-top:0;width:auto;padding:8px 16px;font-size:14px}
-.msg{margin-top:12px;font-size:14px;color:#ffb3c8;min-height:18px}
-.item{border-top:1px solid rgba(255,255,255,.15);padding:12px 0}
-.item p{margin:4px 0;color:#e3c8d2;white-space:pre-wrap}
-.item small{color:#a98d99}
-.top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+body{font-family:Arial,Helvetica,sans-serif;background:#fff;color:#2b2328;line-height:1.6}
+a{color:inherit;text-decoration:none}
 [hidden]{display:none!important}
+header{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid #f0d9e1}
+.nav{max-width:1000px;margin:auto;display:flex;align-items:center;justify-content:space-between;padding:14px 20px;gap:10px}
+.logo{font-weight:900;font-size:21px;color:#7d1734}
+.links{display:flex;gap:6px;align-items:center}
+.links a{padding:9px 13px;border-radius:20px;font-weight:700;font-size:14px;cursor:pointer}
+.links a.active,.links a:hover{background:#fff0f5;color:#7d1734}
+.links a.cta{background:#7d1734;color:#fff}
+.menu{display:none;background:#7d1734;color:#fff;border:0;border-radius:10px;width:42px;height:42px;font-size:22px}
+.wrap{max-width:1000px;margin:auto;padding:40px 20px}
+.hero{background:linear-gradient(135deg,#631329,#7d1734 60%,#c2355f);color:#fff;padding:70px 20px;text-align:center}
+.hero h1{font-size:clamp(32px,6vw,54px);line-height:1.1;margin-bottom:14px}
+.hero p{max-width:600px;margin:0 auto 24px;color:#ffe3ec}
+.btn{display:inline-block;border:0;border-radius:28px;background:#c2355f;color:#fff;padding:13px 24px;font-weight:700;font-size:16px;cursor:pointer}
+.btn.ghost{background:transparent;border:1px solid #7d1734;color:#7d1734}
+h2{color:#631329;font-size:30px;margin-bottom:12px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:20px}
+.card{border:1px solid #f0d9e1;border-radius:18px;padding:22px;background:#fff;box-shadow:0 8px 24px rgba(90,20,40,.06)}
+.card h3{color:#631329;margin-bottom:6px}
+.narrow{max-width:440px;margin:auto}
+label{display:block;font-size:14px;margin:12px 0 6px;font-weight:700;color:#563d45}
+input,textarea{width:100%;padding:13px;border-radius:12px;border:1px solid #e3c5d0;font-size:16px;font-family:inherit}
+.card .btn{width:100%;margin-top:16px}
+.msg{margin-top:12px;font-size:14px;color:#b0214f;min-height:18px}
+.note{font-size:13px;color:#7a6a70;margin-top:14px}
+.item{border-top:1px solid #f0d9e1;padding:12px 0}
+.item p{white-space:pre-wrap;color:#64575c}
+.item small{color:#9a8a90}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+footer{background:#4e1025;color:#f9dce6;text-align:center;padding:24px;font-size:14px}
+@media(max-width:760px){
+.menu{display:block}
+.links{display:none;position:absolute;top:70px;left:0;right:0;background:#fff;flex-direction:column;align-items:stretch;padding:14px;border-bottom:1px solid #f0d9e1}
+.links.open{display:flex}
+.links a{text-align:center}
+.grid{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
-<main>
 
-<section id="loginView">
-<h1>Staff Portal</h1>
-<p class="sub">Sign in with the email your admin added.</p>
+<header>
+<nav class="nav">
+<a class="logo" data-view="home" href="#">Demo Company</a>
+<button class="menu" id="menu" aria-label="Menu">☰</button>
+<div class="links" id="links">
+<a data-view="home" href="#">Home</a>
+<a data-view="about" href="#">About</a>
+<a data-view="contact" href="#">Contact</a>
+<a class="cta" id="navAuth" data-view="login" href="#">Staff Login</a>
+<a id="logout" href="#" hidden>Log out</a>
+</div>
+</nav>
+</header>
+
+<section id="home">
+<div class="hero">
+<h1>Reliable services.<br>A team you can trust.</h1>
+<p>Demo Company delivers quality work for clients across the country. Our staff manage everything through a secure internal portal.</p>
+<a class="btn" data-view="contact" href="#">Contact Us</a>
+</div>
+<div class="wrap">
+<h2>What we do</h2>
+<div class="grid">
+<div class="card"><h3>Consulting</h3><p>Practical advice that helps your business grow.</p></div>
+<div class="card"><h3>Operations</h3><p>Dependable day-to-day delivery by trained staff.</p></div>
+<div class="card"><h3>Support</h3><p>Friendly help whenever you need us.</p></div>
+</div>
+</div>
+</section>
+
+<section id="about" hidden>
+<div class="wrap">
+<h2>About us</h2>
+<p>Demo Company is a team of professionals committed to honest, high-quality service. Staff record their daily work in our secure portal, so management always has an accurate picture of progress.</p>
+</div>
+</section>
+
+<section id="contact" hidden>
+<div class="wrap narrow">
+<h2>Contact us</h2>
+<div class="card">
+<p>Send us a message and we will reply as soon as we can.</p>
+<a class="btn" href="mailto:treasureekpe473@gmail.com?subject=Enquiry">Email us</a>
+</div>
+</div>
+</section>
+
+<section id="login" hidden>
+<div class="wrap narrow">
+<h2>Staff login</h2>
 <form id="loginForm" class="card">
 <label for="email">Email</label>
 <input id="email" type="email" autocomplete="username" required>
 <label for="password">Password</label>
 <input id="password" type="password" autocomplete="current-password" required>
-<button type="submit">Log in</button>
+<button class="btn" type="submit">Log in</button>
+<button class="btn ghost" type="button" id="forgot">Forgot password?</button>
 <div class="msg" id="loginMsg"></div>
+<p class="note">For authorized staff only. Accounts are created by the administrator, and there is no public sign-up.</p>
 </form>
+</div>
 </section>
 
-<section id="dashView" hidden>
-<div class="top">
-<div><h1>Daily Tasks</h1><p class="sub" id="who"></p></div>
-<button class="ghost" id="logout">Log out</button>
-</div>
+<section id="dashboard" hidden>
+<div class="wrap narrow">
+<div class="top"><div><h2>Daily Tasks</h2><p id="who"></p></div></div>
 <form id="taskForm" class="card">
 <label for="title">What did you complete?</label>
 <input id="title" maxlength="200" required>
 <label for="details">Details (optional)</label>
 <textarea id="details" rows="3"></textarea>
-<button type="submit">Save task</button>
+<button class="btn" type="submit">Save task</button>
 <div class="msg" id="taskMsg"></div>
 </form>
-<h2>My recent tasks</h2>
+<h2 style="margin-top:28px;font-size:22px">My recent tasks</h2>
 <div id="list"></div>
+</div>
 </section>
 
-</main>
+<section id="reset" hidden>
+<div class="wrap narrow">
+<h2>New password</h2>
+<form id="resetForm" class="card">
+<label for="newpass">Choose a new password</label>
+<input id="newpass" type="password" minlength="8" autocomplete="new-password" required>
+<button class="btn" type="submit">Save password</button>
+<div class="msg" id="resetMsg"></div>
+</form>
+</div>
+</section>
+
+<footer>© 2026 Demo Company. All rights reserved.</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -67,26 +149,69 @@ const sb = supabase.createClient(
   "sb_publishable_9DyHD_hh9B_HNSBYSyJtkw_Qz88Y7be"
 );
 const $ = id => document.getElementById(id);
+const views = ["home","about","contact","login","dashboard","reset"];
+let session = null, recovering = false;
 
-async function show() {
-  const { data: { session } } = await sb.auth.getSession();
-  $("loginView").hidden = !!session;
-  $("dashView").hidden = !session;
-  if (session) { $("who").textContent = session.user.email; load(); }
+function go(v) {
+  if (recovering) v = "reset";
+  if (v === "dashboard" && !session) v = "login";
+  if (v === "login" && session) v = "dashboard";
+  views.forEach(x => $(x).hidden = x !== v);
+  document.querySelectorAll("[data-view]").forEach(a => a.classList.toggle("active", a.dataset.view === v && !a.classList.contains("cta")));
+  $("navAuth").textContent = session ? "Dashboard" : "Staff Login";
+  $("navAuth").dataset.view = session ? "dashboard" : "login";
+  $("logout").hidden = !session;
+  $("links").classList.remove("open");
+  window.scrollTo(0, 0);
+  if (v === "dashboard") { $("who").textContent = session.user.email; load(); }
 }
+
+document.addEventListener("click", e => {
+  const a = e.target.closest("[data-view]");
+  if (a) { e.preventDefault(); go(a.dataset.view); }
+});
+$("menu").addEventListener("click", () => $("links").classList.toggle("open"));
+
+sb.auth.onAuthStateChange((ev, s) => {
+  session = s;
+  if (ev === "PASSWORD_RECOVERY") { recovering = true; go("reset"); }
+});
 
 $("loginForm").addEventListener("submit", async e => {
   e.preventDefault();
   $("loginMsg").textContent = "";
-  const { error } = await sb.auth.signInWithPassword({
+  const { data, error } = await sb.auth.signInWithPassword({
     email: $("email").value.trim(),
     password: $("password").value
   });
   if (error) { $("loginMsg").textContent = "Login failed: " + error.message; return; }
-  show();
+  session = data.session;
+  go("dashboard");
 });
 
-$("logout").addEventListener("click", async () => { await sb.auth.signOut(); show(); });
+$("forgot").addEventListener("click", async () => {
+  const email = $("email").value.trim();
+  if (!email) { $("loginMsg").textContent = "Type your email above first."; return; }
+  const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin });
+  $("loginMsg").textContent = error ? error.message : "If that email is registered, a reset link was sent.";
+});
+
+$("resetForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const { error } = await sb.auth.updateUser({ password: $("newpass").value });
+  if (error) { $("resetMsg").textContent = error.message; return; }
+  recovering = false;
+  const { data } = await sb.auth.getSession();
+  session = data.session;
+  go("dashboard");
+});
+
+$("logout").addEventListener("click", async e => {
+  e.preventDefault();
+  await sb.auth.signOut();
+  session = null;
+  go("home");
+});
 
 $("taskForm").addEventListener("submit", async e => {
   e.preventDefault();
@@ -118,7 +243,8 @@ async function load() {
     list.append(d);
   });
 }
-show();
+
+sb.auth.getSession().then(({ data }) => { session = data.session; go("home"); });
 </script>
 </body>
-</html>
+  </html>
