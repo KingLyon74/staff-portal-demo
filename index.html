@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Staff Portal</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Helvetica,sans-serif;background:#1a0610;color:#f3dfe6;min-height:100vh;display:flex;justify-content:center;padding:24px}
+main{width:min(480px,100%)}
+h1{color:#fff;font-size:28px;margin:20px 0 6px}
+h2{color:#fff;font-size:20px;margin:24px 0 10px}
+p.sub{color:#cfb4bf;margin-bottom:20px}
+.card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:22px;margin-top:16px}
+label{display:block;font-size:14px;margin:12px 0 6px;color:#ffd0df}
+input,textarea{width:100%;padding:13px;border-radius:12px;border:1px solid rgba(255,255,255,.25);background:rgba(0,0,0,.3);color:#fff;font-size:16px;font-family:inherit}
+button{margin-top:16px;width:100%;padding:14px;border:0;border-radius:28px;background:#c2355f;color:#fff;font-size:16px;font-weight:700;cursor:pointer}
+button.ghost{background:transparent;border:1px solid #fff;margin-top:0;width:auto;padding:8px 16px;font-size:14px}
+.msg{margin-top:12px;font-size:14px;color:#ffb3c8;min-height:18px}
+.item{border-top:1px solid rgba(255,255,255,.15);padding:12px 0}
+.item p{margin:4px 0;color:#e3c8d2;white-space:pre-wrap}
+.item small{color:#a98d99}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main>
+
+<section id="loginView">
+<h1>Staff Portal</h1>
+<p class="sub">Sign in with the email your admin added.</p>
+<form id="loginForm" class="card">
+<label for="email">Email</label>
+<input id="email" type="email" autocomplete="username" required>
+<label for="password">Password</label>
+<input id="password" type="password" autocomplete="current-password" required>
+<button type="submit">Log in</button>
+<div class="msg" id="loginMsg"></div>
+</form>
+</section>
+
+<section id="dashView" hidden>
+<div class="top">
+<div><h1>Daily Tasks</h1><p class="sub" id="who"></p></div>
+<button class="ghost" id="logout">Log out</button>
+</div>
+<form id="taskForm" class="card">
+<label for="title">What did you complete?</label>
+<input id="title" maxlength="200" required>
+<label for="details">Details (optional)</label>
+<textarea id="details" rows="3"></textarea>
+<button type="submit">Save task</button>
+<div class="msg" id="taskMsg"></div>
+</form>
+<h2>My recent tasks</h2>
+<div id="list"></div>
+</section>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const sb = supabase.createClient(
+  "https://dqjcjynftkxnucpflzkv.supabase.co",
+  "sb_publishable_9DyHD_hh9B_HNSBYSyJtkw_Qz88Y7be"
+);
+const $ = id => document.getElementById(id);
+
+async function show() {
+  const { data: { session } } = await sb.auth.getSession();
+  $("loginView").hidden = !!session;
+  $("dashView").hidden = !session;
+  if (session) { $("who").textContent = session.user.email; load(); }
+}
+
+$("loginForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  $("loginMsg").textContent = "";
+  const { error } = await sb.auth.signInWithPassword({
+    email: $("email").value.trim(),
+    password: $("password").value
+  });
+  if (error) { $("loginMsg").textContent = "Login failed: " + error.message; return; }
+  show();
+});
+
+$("logout").addEventListener("click", async () => { await sb.auth.signOut(); show(); });
+
+$("taskForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  $("taskMsg").textContent = "";
+  const { error } = await sb.from("tasks").insert({
+    title: $("title").value.trim(),
+    details: $("details").value.trim()
+  });
+  if (error) { $("taskMsg").textContent = "Could not save: " + error.message; return; }
+  e.target.reset();
+  $("taskMsg").textContent = "Saved ✓";
+  load();
+});
+
+async function load() {
+  const { data, error } = await sb.from("tasks")
+    .select("title,details,created_at")
+    .order("created_at", { ascending: false }).limit(50);
+  const list = $("list");
+  list.innerHTML = "";
+  if (error) { list.textContent = error.message; return; }
+  if (!data.length) { list.textContent = "No tasks yet."; return; }
+  data.forEach(t => {
+    const d = document.createElement("div"); d.className = "item";
+    const h = document.createElement("strong"); h.textContent = t.title;
+    const p = document.createElement("p"); p.textContent = t.details || "";
+    const s = document.createElement("small"); s.textContent = new Date(t.created_at).toLocaleString();
+    d.append(h, p, s);
+    list.append(d);
+  });
+}
+show();
+</script>
+</body>
+</html>
